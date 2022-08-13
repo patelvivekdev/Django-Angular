@@ -1,0 +1,51 @@
+<div class="card-container">
+  <mat-card>
+    <mat-card-title>Register</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="registerForm">
+        <app-input
+          type="text"
+          placeholder="First Name"
+          [control]="firstName"
+        ></app-input>
+        <app-input
+          type="text"
+          placeholder="Last Name"
+          [control]="lastName"
+        ></app-input>
+        <app-input
+          type="email"
+          placeholder="Enter Email"
+          [control]="email"
+        ></app-input>
+        <app-input
+          type="password"
+          placeholder="Password"
+          [control]="password"
+        ></app-input>
+        <app-input
+          type="password"
+          placeholder="Conform Password"
+          [control]="confirmPassword"
+        ></app-input>
+        <div class="error" *ngIf="passwordMatchError">
+          Password does not match
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        [disabled]="registerForm.invalid"
+        mat-raised-button
+        (click)="onRegister(registerForm)"
+        color="primary"
+      >
+        Register
+      </button>
+      <p>
+        Already have an account?
+        <button mat-button (click)="onLogin()" color="primary">Login</button>
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</div>

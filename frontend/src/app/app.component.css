@@ -1,0 +1,13 @@
+.container {
+  height: 91.5vh;
+}
+
+.menu-spacer {
+  flex: 1 1 auto;
+}
+
+.icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: white;
+}

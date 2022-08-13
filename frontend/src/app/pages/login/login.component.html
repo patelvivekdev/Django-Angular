@@ -1,0 +1,41 @@
+<div class="card-container">
+  <mat-card>
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="loginForm">
+        <app-input
+          [control]="email"
+          type="email"
+          placeholder="Enter Email"
+        ></app-input>
+        <app-input
+          type="password"
+          placeholder="Password"
+          [control]="password"
+        ></app-input>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        [disabled]="loginForm.invalid"
+        mat-raised-button
+        (click)="onLogin(loginForm)"
+        color="primary"
+      >
+        Login
+      </button>
+      <p>
+        Don't remember password?
+        <button mat-button (click)="onForgotPassword()" color="primary">
+          Forgot Password
+        </button>
+      </p>
+      <p>
+        Don't have an account?
+        <button mat-button (click)="onRegister()" color="primary">
+          Create Account
+        </button>
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,23 @@
+<mat-form-field class="full-width">
+  <input
+    [formControl]="control"
+    matInput
+    [type]="type"
+    [placeholder]="placeholder"
+  />
+</mat-form-field>
+<ng-container *ngIf="control.dirty && control.touched && control.errors">
+  <p class="error" *ngIf="control.hasError('required')">Field is required</p>
+  <p class="error" *ngIf="control.hasError('minlength')">
+    The value must be at least
+    {{ control.errors["minlength"].requiredLength }}
+    characters long
+  </p>
+  <p class="error" *ngIf="control.hasError('min')">
+    Age must be at least
+    {{ control.errors["min"].min }}
+  </p>
+  <p class="error" *ngIf="control.hasError('message')">
+    {{ control.errors["message"] }}
+  </p>
+</ng-container>
