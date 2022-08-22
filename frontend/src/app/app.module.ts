@@ -14,6 +14,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LogoutComponent } from './pages/logout/logout.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +28,10 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     RegisterComponent,
     ProfileComponent,
     NotFoundComponent,
+    LogoutComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,8 +42,15 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     MaterialExampleModule,
     FontAwesomeModule,
     SharedModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -10,11 +10,13 @@ class JWTAuth(BaseAuthentication):
 
         header = JWTauthentication.get_header(request)
         if header is None:
-            raise exceptions.AuthenticationFailed('Invalid credentials')
+            raise exceptions.AuthenticationFailed(
+                'Invalid credentials!!. Please login again')
 
         raw_token = JWTauthentication.get_raw_token(header)
         if raw_token is None:
-            raise exceptions.AuthenticationFailed('Invalid credentials')
+            raise exceptions.AuthenticationFailed(
+                'Invalid credentials!!. Please login again')
 
         validated_token = JWTauthentication.get_validated_token(raw_token)
         user = JWTauthentication.get_user(validated_token)

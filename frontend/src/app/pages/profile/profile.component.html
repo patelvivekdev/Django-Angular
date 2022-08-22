@@ -1,1 +1,15 @@
-<p>profile works!</p>
+<div class="card-container">
+  <mat-card>
+    <mat-card-title>My profile</mat-card-title>
+    <mat-card-content>
+      <h3>Name : {{ user.first_name }} {{ user.last_name }}</h3>
+      <h3>Email : {{ user.email }}</h3>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button (click)="onChangePassword()" color="accent">
+        Change Password
+      </button>
+      <button mat-raised-button (click)="onLogout()" color="primary">Logout</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

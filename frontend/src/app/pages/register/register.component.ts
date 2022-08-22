@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { CustomValidators } from './../../providers/CustomValidators';
 
 const patternWithMessage = (
@@ -23,7 +24,7 @@ const patternWithMessage = (
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  durationInSeconds = 5;
+  durationInSeconds = 3;
   firstName = new FormControl('', [Validators.required]);
   lastName = new FormControl('', [Validators.required]);
   email = new FormControl('', [
@@ -59,21 +60,50 @@ export class RegisterComponent implements OnInit {
       this.registerForm.get('confirmPassword')?.touched
     );
   }
-  constructor(private router: Router, private _snackBar: MatSnackBar) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private _snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {}
 
-  onRegister(form: any) {
-    if (this.registerForm.valid) {
-      this._snackBar.open('Registration Successful', '', {
-        duration: this.durationInSeconds * 1000,
-      });
-      this.router.navigate(['/login']);
-    } else {
-      this._snackBar.open('Registration Failed', '', {
-        duration: this.durationInSeconds * 1000,
-      });
+  onRegister() {
+    if (this.registerForm.invalid) {
+      console.log('register form is invalid', this.registerForm);
+      return;
     }
+    const value = {
+      first_name: String(this.firstName.value),
+      last_name: String(this.lastName.value),
+      email: String(this.email.value),
+      password: String(this.password.value),
+      password_confirmation: String(this.confirmPassword.value),
+    };
+    this.authService.register(value).subscribe({
+      next: (data) => {
+        this.registerForm.reset();
+        this._snackBar.open('User Registration Successful', '', {
+          duration: this.durationInSeconds * 1000,
+        });
+        // Navigate to the login page
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this._snackBar.open('Registration Failed', '', {
+          duration: this.durationInSeconds * 1000,
+        });
+        // if (err.status === 0) {
+        //   this.registerForm.setErrors({
+        //     noConnection: true,
+        //   });
+        // } else {
+        //   this.registerForm.setErrors({
+        //     serverError: true,
+        //   });
+        // }
+      },
+    });
   }
 
   onLogin() {
