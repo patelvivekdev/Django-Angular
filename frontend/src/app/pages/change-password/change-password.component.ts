@@ -7,16 +7,8 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { CustomValidators } from './../../providers/CustomValidators';
+import { CustomValidators } from '../../validators/custom-validators';
 import { AuthService } from 'src/app/services/auth.service';
-
-const patternWithMessage = (
-  pattern: string | RegExp,
-  message: string
-): ValidatorFn => {
-  const delegateFn = Validators.pattern(pattern);
-  return (control) => (delegateFn(control) === null ? null : { message });
-};
 
 @Component({
   selector: 'app-change-password',
@@ -26,7 +18,7 @@ const patternWithMessage = (
 export class ChangePasswordComponent implements OnInit {
   old_password = new FormControl('', [
     Validators.required,
-    patternWithMessage(
+    this.customValidators.patternWithMessage(
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
       `Password must be at least 8 characters | contain at least 1 uppercase letter, 1 lowercase letter, and 1 number and Can contain special characters`
     ),
@@ -34,7 +26,7 @@ export class ChangePasswordComponent implements OnInit {
 
   password = new FormControl('', [
     Validators.required,
-    patternWithMessage(
+    this.customValidators.patternWithMessage(
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
       `Password must be at least 8 characters | contain at least 1 uppercase letter, 1 lowercase letter, and 1 number and Can contain special characters`
     ),
@@ -46,7 +38,9 @@ export class ChangePasswordComponent implements OnInit {
       password: this.password,
       confirmPassword: this.confirmPassword,
     },
-    [CustomValidators.MatchValidator('password', 'confirmPassword')]
+    {
+      validators: [this.customValidators.match],
+    }
   );
 
   get passwordMatchError() {
@@ -59,7 +53,8 @@ export class ChangePasswordComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private customValidators: CustomValidators
   ) {}
 
   ngOnInit(): void {}
@@ -82,7 +77,7 @@ export class ChangePasswordComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this._snackBar.open(err.error.message, '', {
+        this._snackBar.open(err.error.detail, '', {
           duration: 3000,
         });
       },

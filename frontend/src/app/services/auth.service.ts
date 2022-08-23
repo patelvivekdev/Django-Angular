@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { TokenService } from './token.service';
 
 interface registerCredentials {
   first_name: string;
@@ -60,12 +61,21 @@ interface changePasswordCredentials {
 })
 export class AuthService {
   signedin$ = new BehaviorSubject(false);
-  constructor(private http: HttpClient) {}
+  constructor(private tokenService: TokenService, private http: HttpClient) {}
+
+  checkUserEmail(email: string) {
+    return this.http.post<{ available: boolean }>(
+      `${environment.apiUrl}user/check/email/`,
+      {
+        email: email,
+      }
+    );
+  }
 
   register(credentials: registerCredentials) {
     return this.http
       .post<registerResponse>(
-        `http://127.0.0.1:8000/api/v1/user/register/`,
+        `${environment.apiUrl}user/register/`,
         credentials
       )
       .pipe(tap(() => this.signedin$.next(true)));
@@ -90,7 +100,7 @@ export class AuthService {
   isAuthenticated() {
     return this.http
       .post<signedinResponse>(`${environment.apiUrl}user/is-authenticated/`, {
-        refresh_token: localStorage.getItem('refresh_token'),
+        refresh_token: this.tokenService.getRefreshToken(),
       })
       .pipe(tap((res) => this.signedin$.next(res.authenticated)));
   }

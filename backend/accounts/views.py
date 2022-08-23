@@ -12,6 +12,20 @@ from accounts.authentication import JWTAuth
 from accounts.utils import send_email
 
 
+class CheckUserEmail(APIView):
+    """
+    Check email is used or not.
+    """
+
+    def post(self, request):
+        data = request.data
+
+        user = CustomUser.objects.filter(email=data['email']).first()
+        if not user:
+            return Response({'available': True})
+        raise exceptions.ValidationError("Email is already in use.")
+
+
 class RegisterAPIView(APIView):
     def post(self, request):
         data = request.data

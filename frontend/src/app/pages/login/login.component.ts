@@ -8,19 +8,8 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-
-const patternWithMessage = (
-  pattern: string | RegExp,
-  message: string
-): ValidatorFn => {
-  const delegateFn = Validators.pattern(pattern);
-  return (control) => (delegateFn(control) === null ? null : { message });
-};
-
-const minNumberWithMessage = (min: number, message: string): ValidatorFn => {
-  const delegateFn = Validators.minLength(min);
-  return (control) => (delegateFn(control) === null ? null : { message });
-};
+import { TokenService } from 'src/app/services/token.service';
+import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +20,7 @@ export class LoginComponent implements OnInit {
   durationInSeconds = 3;
   email = new FormControl('', [
     Validators.required,
-    patternWithMessage(
+    this.customValidators.patternWithMessage(
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
       'Invalid Email'
     ),
@@ -46,7 +35,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private customValidators: CustomValidators,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {}
@@ -61,8 +52,7 @@ export class LoginComponent implements OnInit {
     };
     this.authService.login(value).subscribe({
       next: (data) => {
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
+        this.tokenService.saveToken(data.access_token, data.refresh_token);
         this._snackBar.open('Login Successful', '', {
           duration: this.durationInSeconds * 1000,
         });
@@ -74,7 +64,7 @@ export class LoginComponent implements OnInit {
             duration: this.durationInSeconds * 1000,
           });
         } else {
-          this._snackBar.open('Something went wrong', '', {
+          this._snackBar.open('Something went wrong!!! Please try again.', '', {
             duration: this.durationInSeconds * 1000,
           });
         }

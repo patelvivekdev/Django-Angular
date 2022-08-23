@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from accounts.views import (
+    CheckUserEmail,
     RegisterAPIView,
     LoginAPIView,
     UserAPIView,
@@ -14,6 +15,7 @@ from accounts.views import (
 
 
 urlpatterns = [
+    path('check/email/', CheckUserEmail.as_view(), name='check_email'),
     path('register/', RegisterAPIView.as_view(), name='register'),
     path('login/', LoginAPIView.as_view(), name='login'),
     path('logout/', LogoutAPIView.as_view(), name='logout'),

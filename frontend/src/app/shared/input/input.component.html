@@ -4,6 +4,7 @@
     matInput
     [type]="type"
     [placeholder]="placeholder"
+    [autocomplete]="'off'"
   />
 </mat-form-field>
 <ng-container *ngIf="control.dirty && control.touched && control.errors">
@@ -19,5 +20,11 @@
   </p>
   <p class="error" *ngIf="control.hasError('message')">
     {{ control.errors["message"] }}
+  </p>
+  <p class="error" *ngIf="control.errors?.['usernameTaken']">
+    Email is already taken
+  </p>
+  <p class="error" *ngIf="control.errors?.['noConnection']">
+    Check your internet connection and try again.
   </p>
 </ng-container>

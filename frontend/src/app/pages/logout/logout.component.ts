@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-logout',
@@ -12,7 +13,8 @@ export class LogoutComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -22,8 +24,7 @@ export class LogoutComponent implements OnInit {
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        this.tokenService.clear();
         this._snackBar.open('User Logout Successful', '', {
           duration: 2 * 1000,
         });
