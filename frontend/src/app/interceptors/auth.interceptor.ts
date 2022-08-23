@@ -16,6 +16,7 @@ import {
   throwError,
 } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -32,17 +33,17 @@ export class AuthInterceptor implements HttpInterceptor {
     if (!this.refresh) {
       this.refresh = true;
       this.refreshTokenSubject.next(null);
-      const refresh_token = localStorage.getItem('refresh_token');
+      const refresh_token = this.tokenService.getRefreshToken();
       if (refresh_token) {
         return this.authService.refreshToken(refresh_token).pipe(
           switchMap((res: any) => {
-            localStorage.setItem('access_token', res.access_token);
+            this.tokenService.setAccessToken(res.access_token);
             this.refreshTokenSubject.next(res.access_token);
             return next.handle(this.addTokenHeader(request, res.access_token));
           }),
           catchError((err: HttpErrorResponse) => {
             this.refresh = false;
-            localStorage.removeItem('access_token');
+            this.tokenService.removeAccessToken();
             return throwError(() => err);
           })
         );
@@ -55,14 +56,17 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap((token) => next.handle(this.addTokenHeader(request, token)))
     );
   }
-  constructor(private authService: AuthService) {}
+  constructor(
+    private tokenService: TokenService,
+    private authService: AuthService
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     let authReq = request;
-    const access_token = localStorage.getItem('access_token');
+    const access_token = this.tokenService.getAccessToken();
 
     if (access_token != null) {
       authReq = this.addTokenHeader(request, access_token);

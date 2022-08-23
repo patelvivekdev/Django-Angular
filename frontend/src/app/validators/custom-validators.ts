@@ -10,8 +10,8 @@ import {
 })
 export class CustomValidators {
   match(control: AbstractControl<any, any>): ValidationErrors | null {
-    const { password, passwordConfirmation } = control.value;
-    return password === passwordConfirmation ? null : { misMatch: true };
+    const { password, confirmPassword } = control.value;
+    return password === confirmPassword ? null : { misMatch: true };
   }
 
   patternWithMessage = (

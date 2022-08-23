@@ -45,7 +45,7 @@ export class ChangePasswordComponent implements OnInit {
 
   get passwordMatchError() {
     return (
-      this.changePasswordForm.getError('mismatch') &&
+      this.changePasswordForm.getError('misMatch') &&
       this.changePasswordForm.get('confirmPassword')?.touched
     );
   }

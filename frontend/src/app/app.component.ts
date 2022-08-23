@@ -26,8 +26,7 @@ export class AppComponent {
   ngOnInit() {
     this.authService.isAuthenticated().subscribe({
       next: (data) => {
-        console.log(data);
-        // this.signedin$.next(data.authenticated);
+        this.signedin$.next(data.authenticated);
       },
       error: (err) => {
         if (err.status === 403) {

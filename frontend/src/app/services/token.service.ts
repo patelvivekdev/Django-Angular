@@ -9,12 +9,20 @@ export class TokenService {
     localStorage.setItem('refresh_token', refresh_token);
   }
 
+  setAccessToken(access_token: string) {
+    localStorage.setItem('access_token', access_token);
+  }
+
   getAccessToken() {
     return localStorage.getItem('access_token');
   }
 
   removeAccessToken() {
     return localStorage.removeItem('access_token');
+  }
+
+  setRefreshToken(refresh_token: string) {
+    localStorage.setItem('refresh_token', refresh_token);
   }
 
   getRefreshToken() {

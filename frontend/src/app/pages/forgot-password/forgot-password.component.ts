@@ -8,14 +8,7 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-
-const patternWithMessage = (
-  pattern: string | RegExp,
-  message: string
-): ValidatorFn => {
-  const delegateFn = Validators.pattern(pattern);
-  return (control) => (delegateFn(control) === null ? null : { message });
-};
+import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
   selector: 'app-forgot-password',
@@ -25,7 +18,7 @@ const patternWithMessage = (
 export class ForgotPasswordComponent implements OnInit {
   email = new FormControl('', [
     Validators.required,
-    patternWithMessage(
+    this.customValidators.patternWithMessage(
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
       'Invalid Email'
     ),
@@ -36,7 +29,8 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private customValidators: CustomValidators
   ) {}
 
   ngOnInit(): void {}
@@ -48,9 +42,13 @@ export class ForgotPasswordComponent implements OnInit {
     const value = String(this.email.value);
     this.authService.forgotPassword(value).subscribe({
       next: (data) => {
-        this._snackBar.open('Email sent', '', {
-          duration: 3 * 1000,
-        });
+        this._snackBar.open(
+          `Reset Password Email sent to email address ${this.email.value}`,
+          '',
+          {
+            duration: 3 * 1000,
+          }
+        );
         this.router.navigate(['/login']);
       },
       error: (err) => {

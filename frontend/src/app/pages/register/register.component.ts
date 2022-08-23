@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit {
 
   get passwordMatchError() {
     return (
-      this.registerForm.getError('mismatch') &&
+      this.registerForm.getError('misMatch') &&
       this.registerForm.get('confirmPassword')?.touched
     );
   }

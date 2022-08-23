@@ -41,7 +41,7 @@ export class ResetPasswordComponent implements OnInit {
 
   get passwordMatchError() {
     return (
-      this.resetPasswordForm.getError('mismatch') &&
+      this.resetPasswordForm.getError('misMatch') &&
       this.resetPasswordForm.get('confirmPassword')?.touched
     );
   }

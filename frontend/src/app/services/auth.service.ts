@@ -89,7 +89,9 @@ export class AuthService {
 
   logout() {
     return this.http
-      .post(`${environment.apiUrl}user/logout/`, {})
+      .post(`${environment.apiUrl}user/logout/`, {
+        refresh_token: this.tokenService.getRefreshToken(),
+      })
       .pipe(tap(() => this.signedin$.next(false)));
   }
 
@@ -118,7 +120,6 @@ export class AuthService {
   }
 
   resetPassword(credentials: resetPasswordCredentials) {
-    console.log('credentials', credentials);
     return this.http.post(
       `${environment.apiUrl}user/password/reset/`,
       credentials
